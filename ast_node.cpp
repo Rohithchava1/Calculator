@@ -2,4 +2,4 @@
 // Purpose: Empty virtual destructor for ASTNode.
 #include "ast_node.h"
 
-ASTNode::~ASTNode() { }
+ASTNode::~ASTNode() {  }

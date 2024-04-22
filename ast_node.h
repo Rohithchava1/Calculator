@@ -6,6 +6,7 @@
 #ifndef AST_NODE_H
 #define AST_NODE_H
 #include "ref_env.h"
+#include <string.h>
 class RefEnv;
 
 struct ASTResult {

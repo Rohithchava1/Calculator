@@ -23,7 +23,7 @@ private:
   // < Expression > ::= < Ref > < Expression' > 
   //                    | < Sum >                       
   ASTNode *parse_expression();
-
+  ASTNode *parse_input();
   // < Expression' > ::= ASSIGN < Expression >
   //                     | < Sum' >
   ASTNode *parse_expression2(ASTNode *left);
@@ -31,6 +31,7 @@ private:
   //< Sum > ::= < Term > < Sum' >
   ASTNode *parse_sum();
 
+  ASTNode *parse_sroot();
   //< Sum' >::= ADD < Term > < Sum' >
   //                   | SUB < Term > < Sum' >
   //                   | ""
@@ -42,6 +43,8 @@ private:
   //< Term' >      ::= MUL < Factor > < Term' >
   //                   | DIV < Factor > < Term' >
   //                   | ""
+  ASTNode *parse_display();
+
   ASTNode *parse_term2(ASTNode *left);
   
   //< Factor >     ::= < Exponent > < Factor' >
@@ -59,6 +62,8 @@ private:
 
   //< Ref >        ::= ID
   ASTNode *parse_ref();
+
+  
 };
 
 #endif

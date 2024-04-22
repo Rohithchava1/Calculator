@@ -3,14 +3,18 @@
 
 #include "calculator_parser.h"
 #include "add_node.h"
+#include "display_node.h"
+#include "input_node.h"
+#include <stdexcept>
 #include "divide_node.h"
 #include "multiply_node.h"
 #include "pow_node.h"
 #include "subtract_node.h"
 #include "number_node.h"
 #include "ref_node.h"
+#include "sroot_node.h"
 #include "assign_node.h"
-#include <stdexcept>
+
 
 // advance the lexer
 void CalculatorParser::next() { _cur = _lexer->next(); }
@@ -25,8 +29,13 @@ ASTNode *CalculatorParser::parse_expression() {
   if(has(CalculatorLexer::ID)) {
     ASTNode *left = parse_ref();
     return parse_expression2(left);
+  } else if(has(CalculatorLexer::DISPLAY)) {
+    return parse_display();
+  } else if(has(CalculatorLexer::INPUT)) {
+    return parse_input();
+  } else if(has(CalculatorLexer::SROOT)) {
+    return parse_sroot();
   }
-
   return parse_sum();
 }
 
@@ -62,6 +71,8 @@ ASTNode *CalculatorParser::parse_sum2(ASTNode *left) {
   } else if (has(CalculatorLexer::SUB)) {
     next(); // consume SUB
     result = new SubtractNode();
+  } else if (has(CalculatorLexer::MUL) || has(CalculatorLexer::DIV) || has(CalculatorLexer::POW)) {
+    return parse_term2(left);
   }
 
   if(result) {
@@ -72,7 +83,17 @@ ASTNode *CalculatorParser::parse_sum2(ASTNode *left) {
 
   return left; // epsilon
 }
-
+ASTNode *CalculatorParser::parse_sroot() {
+  // detect an error
+  if(!has(CalculatorLexer::SROOT)) {
+    throw std::runtime_error("Expected SQRT");
+  }
+  next();
+  SrootNode *node = new SrootNode();
+  node->right(parse_expression());
+  next();
+  return node;
+}
 // <Term> ::= <Factor> <Term'>
 ASTNode *CalculatorParser::parse_term() {
   ASTNode *node = parse_factor();
@@ -91,6 +112,8 @@ ASTNode *CalculatorParser::parse_term2(ASTNode *left) {
   } else if (has(CalculatorLexer::DIV)) {
     next(); // consume DIV 
     result = new DivideNode();
+  } else if (has(CalculatorLexer::POW)) {
+    return parse_factor2(left);
   }
 
   if(result) {
@@ -101,7 +124,25 @@ ASTNode *CalculatorParser::parse_term2(ASTNode *left) {
 
   return left; // epsilon
 }
-
+ASTNode *CalculatorParser::parse_input() {
+  // detect an error
+  if(!has(CalculatorLexer::INPUT)) {
+    throw std::runtime_error("Expected INPUT");
+  }
+  next();
+  InputNode *node = new InputNode();
+  ASTNode *left =parse_ref();
+  if(has(CalculatorLexer::SEPARATOR)) {
+    next();
+    node->right(parse_ref());
+    node->left(left);
+    next();
+  } else {
+    node->right(left);
+    next();
+  }
+  return node;
+}
 // <Factor> ::= <Exponent> <Factor'>
 ASTNode *CalculatorParser::parse_factor() {
   ASTNode *node = parse_exponent();
@@ -113,10 +154,11 @@ ASTNode *CalculatorParser::parse_factor() {
 ASTNode *CalculatorParser::parse_factor2(ASTNode *left) {
   if (has(CalculatorLexer::POW)) {
     next(); // consume POW
+    ASTNode *right = parse_exponent();
     PowNode *node = new PowNode();
     node->left(left);
-    node->right(parse_exponent());
-    return node;
+    node->right(right);
+    return parse_factor2(node);
   }
 
   return left; // epsilon
@@ -156,14 +198,25 @@ ASTNode *CalculatorParser::parse_ref() {
   return node;
 }
 
+ASTNode *CalculatorParser::parse_display() {
+  // detect an error
+  if(!has(CalculatorLexer::DISPLAY)) {
+    throw std::runtime_error("Expected DISPLAY");
+  }
+    next();
+    DisplayNode *node = new DisplayNode();
+    node->right(parse_expression());
+    next();
+    return node;
+}
+
+
+
 ASTNode *CalculatorParser::parse(CalculatorLexer *lexer) {
   // initialize the lexer
   _lexer = lexer;
   next(); 
   
   ASTNode *result = parse_expression();
-  if (_cur.tok != CalculatorLexer::EOI) {
-    throw std::runtime_error("Unexpected tokens at the end of expression");
-  }
   return result;
 }

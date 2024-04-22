@@ -16,6 +16,8 @@ public:
 
   // Assign a value to the reference
   void assign(RefEnv *env, ASTResult _value);
+
+  std::string name(){ return _name;}
 private:
   std::string _name;
 };

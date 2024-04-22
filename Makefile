@@ -12,6 +12,9 @@ CALCULATOR_OBJ= add_node.o\
 								subtract_node.o\
 								ref_node.o\
 								assign_node.o\
+								display_node.o\
+								input_node.o\
+								sroot_node.o\
 
 #compiler information
 LD=g++
