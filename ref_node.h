@@ -7,6 +7,7 @@
 
 class RefNode : public ASTNode {
 public:
+ std::string name(){ return _name;}
   // Constructor and Destructor
   RefNode(const std::string &_name);
   virtual ~RefNode();
@@ -16,9 +17,7 @@ public:
 
   // Assign a value to the reference
   void assign(RefEnv *env, ASTResult _value);
-
-  std::string name(){ return _name;}
-private:
+  private:
   std::string _name;
 };
 #endif 

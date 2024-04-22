@@ -1,34 +1,27 @@
 #include "input_node.h"
 #include "ref_node.h"
 #include <iostream>
+using namespace std;
 
-// must have this to satisfy the pure virtual function
 ASTResult InputNode::apply(const ASTResult &lhs, const ASTResult &rhs) {
-  // This function is never called
   return ASTResult();
 }
-// evaluate the assignment
+
 ASTResult InputNode::eval(RefEnv *env) {
- 
-  ASTResult obj;
-  std::string input;
-  obj.type = ASTResult::REAL;
-  RefNode *ref = (RefNode *) right();
-
-
-
-  if(left()){
-    left()->eval(env);
-    getline(std::cin, input);
+  ASTResult result;
+  string input;
+  result.type = ASTResult::REAL;
+  RefNode *ref_node = (RefNode *)right();
+  if (left()) {
+    left()->eval(new RefEnv());
+    cin >> input;
   } else {
-    std::cout << ref->name() <<"=";
-    getline(std::cin, input);
+    cout << ref_node->name() << "=";
+    cin >> input;
   }
-  
-  
-  obj.value.r = std::stof(input);
-  ref->assign(env, obj);
-  ASTResult resultn;
-  resultn.type = ASTResult::VOID;
-  return resultn;
+  result.value.r = stof(input);
+  ref_node->assign(new RefEnv(), result);
+  ASTResult res;
+  res.type = ASTResult::VOID;
+  return res;
 }

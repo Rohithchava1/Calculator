@@ -6,18 +6,19 @@
 ASTResult PowNode::apply(const ASTResult &left, const ASTResult &right) {
   ASTResult result;
 
-  // Exponentiation outcomes are simplified to REAL for simplicity and to accommodate
-  // large or fractional powers.
+  // Exponentiation outcomes are simplified to REAL for simplicity and to
+  // accommodate large or fractional powers.
   result.type = ASTResult::REAL;
 
-  if(left.type == ASTResult::INT && right.type == ASTResult::INT) {
+  if (left.type == ASTResult::INT && right.type == ASTResult::INT) {
     result.type = ASTResult::INT;
-    result.value.i = (int) std::pow(static_cast<double>(left.value.i), right.value.i);
-  } else if(left.type == ASTResult::REAL && right.type == ASTResult::REAL) {
+    result.value.i =
+        (int)std::pow(static_cast<double>(left.value.i), right.value.i);
+  } else if (left.type == ASTResult::REAL && right.type == ASTResult::REAL) {
     result.value.r = std::pow(left.value.r, right.value.r);
-  } else if(left.type == ASTResult::INT && right.type == ASTResult::REAL) {
+  } else if (left.type == ASTResult::INT && right.type == ASTResult::REAL) {
     result.value.r = std::pow(static_cast<double>(left.value.i), right.value.r);
-  } else if(left.type == ASTResult::REAL && right.type == ASTResult::INT) {
+  } else if (left.type == ASTResult::REAL && right.type == ASTResult::INT) {
     result.value.r = std::pow(left.value.r, static_cast<double>(right.value.i));
   } else {
     // Handle invalid cases or errors

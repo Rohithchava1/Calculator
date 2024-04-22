@@ -1,9 +1,9 @@
 display "Welcome to the right triangle calculator!\n"
-input  A
-input B
-A := A^2
-B := B^2
-C := A + B
-C := sroot C
-display "The Hyptoenuse is:  "
+input X
+input Y
+X := X^2
+Y := Y^2
+Z := X + Y
+Z := squareroot Z
+display "The Hyptoenuse is: "
 display C

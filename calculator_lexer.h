@@ -17,19 +17,18 @@ public:
     ADD = 1,
     SUB,
     MUL,
-    DISPLAY,
-    INPUT,
-    SROOT,
     DIV,
     POW,
     LPAREN,
     RPAREN,
-    SEPARATOR,
     INT,
     REAL,
     ID,
-    ASSIGN
-    
+    ASSIGN,
+    DISPLAY,
+    SEPARATOR,
+    INPUT,
+    SQUAREROOT,
   };
 
   // set the input string to scan

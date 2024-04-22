@@ -1,13 +1,12 @@
-
 #include "display_node.h"
-#include "ref_node.h"
-#include <iostream>
-// must have this to satisfy the pure virtual function
-ASTResult DisplayNode::apply(const ASTResult &lhs, const ASTResult &rhs) {
-  // This function is never called
-  return ASTResult();
+#include "ast_node.h"
+#include "iostream"
 
+using namespace std;
+ASTResult DisplayNode::apply(const ASTResult &left, const ASTResult &right) {
+  return ASTResult();
 }
+
 ASTResult DisplayNode::eval(RefEnv *env) {
   ASTResult result = right()->eval(env);
 
@@ -18,6 +17,5 @@ ASTResult DisplayNode::eval(RefEnv *env) {
     }
   result.type = ASTResult::VOID;
   return result;
-
 }
 

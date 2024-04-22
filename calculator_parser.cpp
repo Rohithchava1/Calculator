@@ -12,7 +12,7 @@
 #include "subtract_node.h"
 #include "number_node.h"
 #include "ref_node.h"
-#include "sroot_node.h"
+#include "squareroot_node.h"
 #include "assign_node.h"
 
 
@@ -33,8 +33,8 @@ ASTNode *CalculatorParser::parse_expression() {
     return parse_display();
   } else if(has(CalculatorLexer::INPUT)) {
     return parse_input();
-  } else if(has(CalculatorLexer::SROOT)) {
-    return parse_sroot();
+  } else if(has(CalculatorLexer::SQUAREROOT)) {
+    return parse_squareroot();
   }
   return parse_sum();
 }
@@ -83,13 +83,13 @@ ASTNode *CalculatorParser::parse_sum2(ASTNode *left) {
 
   return left; // epsilon
 }
-ASTNode *CalculatorParser::parse_sroot() {
+ASTNode *CalculatorParser::parse_squareroot() {
   // detect an error
-  if(!has(CalculatorLexer::SROOT)) {
+  if(!has(CalculatorLexer::SQUAREROOT)) {
     throw std::runtime_error("Expected SQRT");
   }
   next();
-  SrootNode *node = new SrootNode();
+  SquarerootNode *node = new SquarerootNode();
   node->right(parse_expression());
   next();
   return node;
@@ -216,7 +216,7 @@ ASTNode *CalculatorParser::parse(CalculatorLexer *lexer) {
   // initialize the lexer
   _lexer = lexer;
   next(); 
-  
+
   ASTNode *result = parse_expression();
   return result;
 }
